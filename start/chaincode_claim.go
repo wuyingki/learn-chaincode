@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"encoding/json"
-	//"strings"
+	"strings"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
@@ -15,6 +15,7 @@ type SimpleChaincode struct {
 
 var claimIndexStr = "_marbleindex"				//name for the key/value that will store a list of all known insurance claims
 var openTradesStr = "_opentrades"				//name for the key/value that will store all open trades
+var allstr string
 
 type InsuranceClaim struct{
 	/*
@@ -262,8 +263,19 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	var claimIndex []string
 	json.Unmarshal(claimAsBytes, &claimIndex)							//un stringify it aka JSON.parse()
 	
-	//append
-	claimIndex = append(claimIndex, args[0])								//add marble name to index list
+    //check if duplicated
+   
+    
+    allstr = CToGoString(claimAsBytes[:])
+    
+    if strings.Contains(allstr,args[0]){
+        fmt.Printf("Found receiptId in claimAsBytes \n") 
+    } else {
+        fmt.Printf("receiptId is not in claimAsBytes \n")
+    }
+
+    
+	claimIndex = append(claimIndex, args[0])								//add claim to index list
 	fmt.Println("! claim index: ", claimIndex)
 	jsonAsBytes, _ := json.Marshal(claimIndex)
 	err = stub.PutState(claimIndexStr, jsonAsBytes)						//store name of marble
@@ -305,4 +317,15 @@ func (t *SimpleChaincode) set_user(stub *shim.ChaincodeStub, args []string) ([]b
 	
 	fmt.Println("- end set user")
 	return nil, nil
+}
+
+func CToGoString(c []byte) string {
+    n := -1
+    for i, b := range c {
+        if b == 0 {
+            break
+        }
+        n = i
+    }
+    return string(c[:n+1])
 }
