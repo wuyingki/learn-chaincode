@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"encoding/json"
-	"strings"
-
+	//"strings"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
@@ -207,7 +206,7 @@ func (t *SimpleChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte
 // ============================================================================================================================
 func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
-
+    //var str string
 	// args   0           1        2           3             4
 	//   "receiptid", "hkid", "amount", "claimamount","Company"
     //   "IC2222" , "A1234567", "1000", "500","Company A"
@@ -234,11 +233,11 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 		return nil, errors.New("5th argument -company- must be a non-empty string")
 	}
 	
-    amount, err := strconv.Atoi(args[2])
+    //amount, err := strconv.Atoi(args[2])
 	if err != nil {
 		return nil, errors.New("3rd -amount- argument must be a numeric ")
 	}
-    claimamount, err := strconv.Atoi(args[3])
+    //claimamount, err := strconv.Atoi(args[3])
 	if err != nil {
 		return nil, errors.New("4th -claimamount- argument must be a numeric ")
 	}
@@ -246,7 +245,9 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	// color := strings.ToLower(args[1])
 	// user := strings.ToLower(args[3])
 
-	str := `{"receiptid": "` + args[0] + `", "hkid": "` + args[1] + `", "amount": ` + args0[2] + `, "claimamount": "` + args[3] +  `, "company": "` + args[4] +`"}`
+	str := `{"receiptid": "` + args[0] + `", "hkid": "` + args[1] + `", "amount": ` + args[2] + `, "claimamount": "` + args[3] +  `, "company": "` + args[4] + `"}`
+    
+    fmt.Println("- debug str: " + str)
     
 	err = stub.PutState(args[0], []byte(str))								//store insurance receiptid as key
 	if err != nil {
@@ -291,8 +292,11 @@ func (t *SimpleChaincode) set_user(stub *shim.ChaincodeStub, args []string) ([]b
 	}
 	res := Marble{}
 	json.Unmarshal(marbleAsBytes, &res)										//un stringify it aka JSON.parse()
-	res.User = args[1]														//change the user
-	
+    res.Amount,err = strconv.Atoi(args[2])										//change the user
+	if err != nil {
+		return nil, err
+	}
+    
 	jsonAsBytes, _ := json.Marshal(res)
 	err = stub.PutState(args[0], jsonAsBytes)								//rewrite the marble with id as key
 	if err != nil {
