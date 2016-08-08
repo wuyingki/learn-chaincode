@@ -211,11 +211,13 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	// args   0           1        2           3             4
 	//   "receiptid", "hkid", "amount", "claimamount","Company"
     //   "IC2222" , "A1234567", "1000", "500","Company A"
+    
+    
 	if len(args) != 5 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 5")
 	}
 
-	fmt.Println("- start init claim")
+	fmt.Println("- start init claim -")
 	if len(args[0]) <= 0 {
 		return nil, errors.New("1st argument -receiptid- must be a non-empty string")
 	}
@@ -229,17 +231,23 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 		return nil, errors.New("4th argument -claimamount- must be a non-empty string")
 	}
     if len(args[4]) <= 0 {
-		return nil, errors.New("4th argument -Company- must be a non-empty string")
-	}
-	size, err := strconv.Atoi(args[2])
-	if err != nil {
-		return nil, errors.New("3rd argument must be a numeric string")
+		return nil, errors.New("5th argument -company- must be a non-empty string")
 	}
 	
-	color := strings.ToLower(args[1])
-	user := strings.ToLower(args[3])
+    amount, err := strconv.Atoi(args[2])
+	if err != nil {
+		return nil, errors.New("3rd -amount- argument must be a numeric ")
+	}
+    claimamount, err := strconv.Atoi(args[3])
+	if err != nil {
+		return nil, errors.New("4th -claimamount- argument must be a numeric ")
+	}
+	
+	// color := strings.ToLower(args[1])
+	// user := strings.ToLower(args[3])
 
-	str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(size) + `, "user": "` + user + `"}`
+	str := `{"receiptid": "` + args[0] + `", "hkid": "` + args[1] + `", "amount": ` + args0[2] + `, "claimamount": "` + args[3] +  `, "company": "` + args[4] +`"}`
+    
 	err = stub.PutState(args[0], []byte(str))								//store insurance receiptid as key
 	if err != nil {
 		return nil, err
@@ -255,7 +263,7 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	
 	//append
 	marbleIndex = append(marbleIndex, args[0])								//add marble name to index list
-	fmt.Println("! marble index: ", marbleIndex)
+	fmt.Println("! claim index: ", marbleIndex)
 	jsonAsBytes, _ := json.Marshal(marbleIndex)
 	err = stub.PutState(marbleIndexStr, jsonAsBytes)						//store name of marble
 
