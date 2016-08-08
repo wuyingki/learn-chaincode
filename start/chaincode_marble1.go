@@ -156,26 +156,26 @@ func (t *SimpleChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byt
 	}
 
 	//get the marble index
-	marblesAsBytes, err := stub.GetState(claimIndexStr)
+	claimAsBytes, err := stub.GetState(claimIndexStr)
 	if err != nil {
 		return nil, errors.New("Failed to get marble index")
 	}
-	var marbleIndex []string
-	json.Unmarshal(marblesAsBytes, &marbleIndex)								//un stringify it aka JSON.parse()
+	var claimIndex []string
+	json.Unmarshal(claimAsBytes, &claimIndex)								//un stringify it aka JSON.parse()
 	
 	//remove marble from index
-	for i,val := range marbleIndex{
+	for i,val := range claimIndex{
 		fmt.Println(strconv.Itoa(i) + " - looking at " + val + " for " + name)
 		if val == name{															//find the correct marble
 			fmt.Println("found marble")
-			marbleIndex = append(marbleIndex[:i], marbleIndex[i+1:]...)			//remove it
-			for x:= range marbleIndex{											//debug prints...
-				fmt.Println(string(x) + " - " + marbleIndex[x])
+			claimIndex = append(claimIndex[:i], claimIndex[i+1:]...)			//remove it
+			for x:= range claimIndex{											//debug prints...
+				fmt.Println(string(x) + " - " + claimIndex[x])
 			}
 			break
 		}
 	}
-	jsonAsBytes, _ := json.Marshal(marbleIndex)									//save new index
+	jsonAsBytes, _ := json.Marshal(claimIndex)									//save new index
 	err = stub.PutState(claimIndexStr, jsonAsBytes)
 	return nil, nil
 }
@@ -255,17 +255,17 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	}
 
 	//get the claim index
-	marblesAsBytes, err := stub.GetState(claimIndexStr)
+	claimAsBytes, err := stub.GetState(claimIndexStr)
 	if err != nil {
 		return nil, errors.New("Failed to get claim index")
 	}
-	var marbleIndex []string
-	json.Unmarshal(marblesAsBytes, &marbleIndex)							//un stringify it aka JSON.parse()
+	var claimIndex []string
+	json.Unmarshal(claimAsBytes, &claimIndex)							//un stringify it aka JSON.parse()
 	
 	//append
-	marbleIndex = append(marbleIndex, args[0])								//add marble name to index list
-	fmt.Println("! claim index: ", marbleIndex)
-	jsonAsBytes, _ := json.Marshal(marbleIndex)
+	claimIndex = append(claimIndex, args[0])								//add marble name to index list
+	fmt.Println("! claim index: ", claimIndex)
+	jsonAsBytes, _ := json.Marshal(claimIndex)
 	err = stub.PutState(claimIndexStr, jsonAsBytes)						//store name of marble
 
 	fmt.Println("- end init marble")
