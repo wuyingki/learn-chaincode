@@ -253,7 +253,7 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	if err != nil {
 		return nil, err
 	}
-		/*
+
 	//get the claim index
 	marblesAsBytes, err := stub.GetState(claimIndexStr)
 	if err != nil {
@@ -267,7 +267,7 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	fmt.Println("! claim index: ", marbleIndex)
 	jsonAsBytes, _ := json.Marshal(marbleIndex)
 	err = stub.PutState(claimIndexStr, jsonAsBytes)						//store name of marble
-*/
+
 	fmt.Println("- end init marble")
 	return nil, nil
 }
