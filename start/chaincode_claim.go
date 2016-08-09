@@ -260,6 +260,14 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	if err != nil {
 		return nil, errors.New("Failed to get claim index")
 	}
+    
+    fmt.Println("-----------------------------------")
+    fmt.Println("- claimIndexStr: ", claimIndexStr)
+    fmt.Println("-----------------------------------")
+    fmt.Println("- claimAsBytes: ", claimAsBytes)
+    fmt.Println("-----------------------------------")
+   
+    
 	var claimIndex []string
 	json.Unmarshal(claimAsBytes, &claimIndex)							//un stringify it aka JSON.parse()
 	
@@ -269,9 +277,9 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
     allstr = CToGoString(claimAsBytes[:])
     
     if strings.Contains(allstr,args[0]){
-        fmt.Printf("Found receiptId in claimAsBytes \n") 
+        fmt.Printf("Found receiptId in claimAsBytes " + args[0] + " \n") 
     } else {
-        fmt.Printf("receiptId is not in claimAsBytes \n")
+        fmt.Printf("receiptId is not in claimAsBytes " + args[0] + " \n")
     }
 
     
