@@ -270,7 +270,8 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
     
 	var claimIndex []string
 	json.Unmarshal(claimAsBytes, &claimIndex)							//un stringify it aka JSON.parse()
-	
+	fmt.Println("- json.Unmarshal(claimAsBytes, &claimIndex): ", claimIndex)
+    fmt.Println("-----------------------------------")
     //check if duplicated
    
     
@@ -288,7 +289,7 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	jsonAsBytes, _ := json.Marshal(claimIndex)
 	err = stub.PutState(claimIndexStr, jsonAsBytes)						//store name of claim
 
-	fmt.Println("- end init claim")
+	//fmt.Println("- end init claim")
 	return nil, nil
 }
 
