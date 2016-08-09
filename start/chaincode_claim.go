@@ -13,7 +13,7 @@ import (
 type SimpleChaincode struct {
 }
 
-var claimIndexStr = "_marbleindex"				//name for the key/value that will store a list of all known insurance claims
+var claimIndexStr = "_claimindex"				//name for the key/value that will store a list of all known insurance claims
 var openTradesStr = "_opentrades"				//name for the key/value that will store all open trades
 var allstr string
 
@@ -156,19 +156,19 @@ func (t *SimpleChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byt
 		return nil, errors.New("Failed to delete state")
 	}
 
-	//get the marble index
+	//get the claim index
 	claimAsBytes, err := stub.GetState(claimIndexStr)
 	if err != nil {
-		return nil, errors.New("Failed to get marble index")
+		return nil, errors.New("Failed to get claim index")
 	}
 	var claimIndex []string
 	json.Unmarshal(claimAsBytes, &claimIndex)								//un stringify it aka JSON.parse()
 	
-	//remove marble from index
+	//remove claim from index
 	for i,val := range claimIndex{
 		fmt.Println(strconv.Itoa(i) + " - looking at " + val + " for " + name)
-		if val == name{															//find the correct marble
-			fmt.Println("found marble")
+		if val == name{															//find the correct claim
+			fmt.Println("found claim")
 			claimIndex = append(claimIndex[:i], claimIndex[i+1:]...)			//remove it
 			for x:= range claimIndex{											//debug prints...
 				fmt.Println(string(x) + " - " + claimIndex[x])
@@ -208,9 +208,9 @@ func (t *SimpleChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte
 func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
     //var str string
-	// args   0           1        2           3             4
-	//   "receiptid", "hkid", "amount", "claimamount","Company"
-    //   "IC2222" , "A1234567", "1000", "500","Company A"
+	// args[]  0          1        2           3             4
+	//   "receiptid", "hkid", "amount", "claimamount",  "Company"
+    //   "IC2222" , "A1234567", "1000",     "500",      "Company A"
     
     
 	if len(args) != 5 {
@@ -278,9 +278,9 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	claimIndex = append(claimIndex, args[0])								//add claim to index list
 	fmt.Println("! claim index: ", claimIndex)
 	jsonAsBytes, _ := json.Marshal(claimIndex)
-	err = stub.PutState(claimIndexStr, jsonAsBytes)						//store name of marble
+	err = stub.PutState(claimIndexStr, jsonAsBytes)						//store name of claim
 
-	fmt.Println("- end init marble")
+	fmt.Println("- end init claim")
 	return nil, nil
 }
 
@@ -298,19 +298,19 @@ func (t *SimpleChaincode) set_user(stub *shim.ChaincodeStub, args []string) ([]b
 	
 	fmt.Println("- start set user")
 	fmt.Println(args[0] + " - " + args[1])
-	marbleAsBytes, err := stub.GetState(args[0])
+	claimAsBytes, err := stub.GetState(args[0])
 	if err != nil {
 		return nil, errors.New("Failed to get thing")
 	}
 	res := InsuranceClaim{}
-	json.Unmarshal(marbleAsBytes, &res)										//un stringify it aka JSON.parse()
+	json.Unmarshal(claimAsBytes, &res)										//un stringify it aka JSON.parse()
     res.Amount,err = strconv.Atoi(args[2])										//change the user
 	if err != nil {
 		return nil, err
 	}
     
 	jsonAsBytes, _ := json.Marshal(res)
-	err = stub.PutState(args[0], jsonAsBytes)								//rewrite the marble with id as key
+	err = stub.PutState(args[0], jsonAsBytes)								//rewrite the claim with id as key
 	if err != nil {
 		return nil, err
 	}
