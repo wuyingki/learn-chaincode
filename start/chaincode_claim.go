@@ -62,7 +62,7 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 	}
 
 	// Write the state to the ledger
-	err = stub.PutState("Testing", []byte(strconv.Itoa(Aval)))				//making a test var "abc", I find it handy to read/write to it right away to test the network
+	err = stub.PutState("Testing", []byte(strconv.Itoa(Aval)))				//making a test var "Testing", put Integer
 	if err != nil {
 		return nil, err
 	}
@@ -189,7 +189,7 @@ func (t *SimpleChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byt
 func (t *SimpleChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var name, value string // Entities
 	var err error
-	fmt.Println("running write()")
+	fmt.Println("running write()-")
 
 	if len(args) != 2 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the variable and value to set")
