@@ -10,6 +10,8 @@ import (
 )
 
 // SimpleChaincode example simple Chaincode implementation
+
+
 type SimpleChaincode struct {
 }
 
@@ -246,7 +248,8 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	// color := strings.ToLower(args[1])
 	// user := strings.ToLower(args[3])
 
-	str := `{"receiptid": "` + args[0] + `", "hkid": "` + args[1] + `", "amount": ` + args[2] + `, "claimamount": "` + args[3] +  `, "company": "` + args[4] + `"}`
+	str := `{"receiptid":"` + args[0] + `","hkid":"` + args[1] + `","amount":` + args[2] + `,"claimamount":` + args[3] +  `,"company":"` + args[4] + `"}`
+    //str2 := `{"ReceiptId":"` + args[0] + `","Hkid":"` + args[1] + `","Smount":` + args[2] + `,"ClaimAmount":` + args[3] +  `,"company":"` + args[4] + `"}`
     
     fmt.Println("- debug str: " + str)
     
@@ -262,9 +265,9 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	}
     
     fmt.Println("-----------------------------------")
-    fmt.Println("- claimIndexStr: ", claimIndexStr)
+    fmt.Println("- 20sep2016 claimIndexStr: ", claimIndexStr)
     fmt.Println("-----------------------------------")
-    fmt.Println("- claimAsBytes: ", claimAsBytes)
+    fmt.Println("- 20sep2016 claimAsBytes: ", claimAsBytes)
     fmt.Println("-----------------------------------")
    
     
@@ -279,6 +282,9 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
     
     if strings.Contains(allstr,args[0]){
         fmt.Printf("Found receiptId in claimAsBytes " + args[0] + " \n") 
+        //  t.read(stub, args)
+        claimAsBytes, _ := stub.GetState(args[0])
+        fmt.Printf(" claimAsBytes " + string(claimAsBytes)  + " \n") 
     } else {
         fmt.Printf("receiptId is not in claimAsBytes " + args[0] + " \n")
     }
