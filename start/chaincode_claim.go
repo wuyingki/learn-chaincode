@@ -272,24 +272,26 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	allstr = CToGoString(claimAsBytes[:])
 
 	if strings.Contains(allstr, args[0]) {
-		fmt.Printf("Found receiptId in claimAsBytes " + args[0] + "  -- Not insert \n")
+		fmt.Printf(" !! Found receiptId in claimAsBytes " + args[0] + "  -- Not insert \n")
 		//  t.read(stub, args)
 		claimAsBytes, _ := stub.GetState(args[0])
-		fmt.Printf(" claimAsBytes " + string(claimAsBytes) + " \n")
+		fmt.Printf("!! Found claimAsBytes " + string(claimAsBytes) + " \n")
 	} else {
-		fmt.Printf("receiptId is not in claimAsBytes " + args[0] + " -- insert\n")
+		fmt.Printf("!! receiptId is not in claimAsBytes " + args[0] + " -- insert\n")
 
 		err = stub.PutState(args[0], []byte(str)) //store insurance receiptid as key
 		if err != nil {
 			return nil, err
 		}
+        
+        claimIndex = append(claimIndex, args[0]) //add claim to index list
+        fmt.Println("!! adding claim index: ", claimIndex)
+        jsonAsBytes, _ := json.Marshal(claimIndex)
+        err = stub.PutState(claimIndexStr, jsonAsBytes) //store name of claim
+
 	}
 
-	claimIndex = append(claimIndex, args[0]) //add claim to index list
-	fmt.Println("! claim index: ", claimIndex)
-	jsonAsBytes, _ := json.Marshal(claimIndex)
-	err = stub.PutState(claimIndexStr, jsonAsBytes) //store name of claim
-
+	
 	//fmt.Println("- end init claim")
 	return nil, nil
 }
