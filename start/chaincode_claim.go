@@ -243,13 +243,10 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 		return nil, errors.New("4th -claimamount- argument must be a numeric ")
 	}
 
-	// color := strings.ToLower(args[1])
-	// user := strings.ToLower(args[3])
-
 	str := `{"receiptid":"` + args[0] + `","hkid":"` + args[1] + `","amount":` + args[2] + `,"claimamount":` + args[3] + `,"company":"` + args[4] + `"}`
 	//str2 := `{"ReceiptId":"` + args[0] + `","Hkid":"` + args[1] + `","Smount":` + args[2] + `,"ClaimAmount":` + args[3] +  `,"company":"` + args[4] + `"}`
 
-	fmt.Println("- debug str: " + str)
+	fmt.Println("- init_claim 1st debug str: " + str)
 
 	//get the claim index
 	claimAsBytes, err := stub.GetState(claimIndexStr)
@@ -284,10 +281,10 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 			return nil, err
 		}
         
-        claimIndex = append(claimIndex, args[0]) //add claim to index list
-        fmt.Println("!! adding claim index: ", claimIndex)
-        jsonAsBytes, _ := json.Marshal(claimIndex)
-        err = stub.PutState(claimIndexStr, jsonAsBytes) //store name of claim
+        //claimIndex = append(claimIndex, args[0]) //add claim to index list
+        //fmt.Println("!! adding claim index: ", claimIndex)
+        //jsonAsBytes, _ := json.Marshal(claimIndex)
+        //err = stub.PutState(claimIndexStr, jsonAsBytes) //store name of claim
 
 	}
 
