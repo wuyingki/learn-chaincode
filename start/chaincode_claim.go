@@ -281,11 +281,12 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 			return nil, err
 		}
         
-        //claimIndex = append(claimIndex, args[0]) //add claim to index list
-        //fmt.Println("!! adding claim index: ", claimIndex)
-        //jsonAsBytes, _ := json.Marshal(claimIndex)
-        //err = stub.PutState(claimIndexStr, jsonAsBytes) //store name of claim
+        claimIndex = append(claimIndex, args[0]) //add claim to index list
+        fmt.Println("!! adding claim index: ", claimIndex)
+        jsonAsBytes, _ := json.Marshal(claimIndex)
+        err = stub.PutState(claimIndexStr, jsonAsBytes) //store name of claim
 
+        
 	}
 
 	
