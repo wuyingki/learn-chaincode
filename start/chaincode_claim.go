@@ -216,8 +216,8 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	if len(args) != 5 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 5")
 	}
-
-	fmt.Println("- start init claim -")
+    fmt.Println("- - - - - - - - - - - -")
+	fmt.Println("- start init_claim -")
 	if len(args[0]) <= 0 {
 		return nil, errors.New("1st argument -receiptid- must be a non-empty string")
 	}
@@ -257,8 +257,8 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	fmt.Println("-----------------------------------")
 	fmt.Println("- 20sep2016 claimIndexStr: ", claimIndexStr)
 	fmt.Println("-----------------------------------")
-	fmt.Println("- 20sep2016 claimAsBytes: ", claimAsBytes)
-	fmt.Println("-----------------------------------")
+	//fmt.Println("- 20sep2016 claimAsBytes: ", claimAsBytes)
+	//fmt.Println("-----------------------------------")
 
 	var claimIndex []string
 	json.Unmarshal(claimAsBytes, &claimIndex) //un stringify it aka JSON.parse()
@@ -272,7 +272,9 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 		fmt.Printf(" !! Found receiptId in claimAsBytes " + args[0] + "  -- Not insert \n")
 		//  t.read(stub, args)
 		claimAsBytes, _ := stub.GetState(args[0])
-		fmt.Printf("!! Found claimAsBytes " + string(claimAsBytes) + " \n")
+		fmt.Printf("!! Found claimAsBytes " + string(claimAsBytes) + " -- Not insert \n")
+        
+        return nil, errors.New("Duplicated Claim, receipt id is " + args[0])
 	} else {
 		fmt.Printf("!! receiptId is not in claimAsBytes " + args[0] + " -- insert\n")
 
@@ -290,7 +292,7 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 	}
 
 	
-	//fmt.Println("- end init claim")
+	fmt.Println("- end init claim")
 	return nil, nil
 }
 
