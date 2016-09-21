@@ -273,8 +273,8 @@ func (t *SimpleChaincode) init_claim(stub *shim.ChaincodeStub, args []string) ([
 		//  t.read(stub, args)
 		claimAsBytes, _ := stub.GetState(args[0])
 		fmt.Printf("!! Found claimAsBytes " + string(claimAsBytes) + " -- Not insert \n")
-        
-        return nil, errors.New("Duplicated Claim, receipt id is " + args[0])
+        b:= []byte{'F','A','I','l'}
+        return b, errors.New("Duplicated Claim, receipt id is " + args[0])
 	} else {
 		fmt.Printf("!! receiptId is not in claimAsBytes " + args[0] + " -- insert\n")
 
